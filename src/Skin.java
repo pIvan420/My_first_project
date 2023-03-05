@@ -1,24 +1,24 @@
 public class Skin { // тут будут храниться цена, флот, название скина
 
-    Skin(String skinName, float skinFloat, float skinPrice){
+    Skin(String skinName, Float skinFloat, Float skinPrice){
         this.skinName = skinName;
         this.skinFloat = skinFloat;
         this.skinPrice = skinPrice;
     }
 
     private String skinName;
-    private float skinFloat;
-    private float skinPrice;
+    private Float skinFloat;
+    private Float skinPrice;
 
     public String getSkinName(){
         return skinName;
     }
 
-    public float getSkinFloat(){
+    public Float getSkinFloat(){
         return skinFloat;
     }
 
-    public float getSkinPrice(){
+    public Float getSkinPrice(){
         return skinPrice;
     }
 

@@ -11,7 +11,7 @@ public class OpenCase {
         System.out.print("Привет, это открытие кейса \"Спектр\" из Cs:Go\nСколько денег вы положите на счет?\nВведите сумму: ");
         while (true){ // кладем деньги на счет
             scanner = new Scanner(System.in);
-            if (scanner.hasNextFloat()){
+            if (scanner.hasNextFloat()){ // надо написать защиту от дурака на случай отрицательной суммы
                 inventory = new Inventory(scanner.nextFloat(), spectrum); // деньги хранятся в инвентаре
                 break;
             }

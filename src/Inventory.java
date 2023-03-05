@@ -17,44 +17,59 @@ public class Inventory {
         return sum;
     }
 
+
+    // кладу скин в инвентарь и передаю его в класс OpenCase
+    public Skin openCase(){
+        Skin skin = getSkin();
+        inventory.add(skin);
+        return skin;
+    }
+
     /*
     происходит открытие кейса, где выбираем по шансам тип скинов, потом рандомно скин
     потом рандомно флот, потом рандомно цену (цену в кс определяет рынок, но тут я буду это делать своей логикой)
-    после чего кладу оружие в инвентарь
-     */
-    public void openCase(){
-        Skin skin;
-
+    */
+    private Skin getSkin(){
+        String skinType = getRandomWeaponType();
+        String skin = getRandomSkin(skinType);
+        Float[] prices = caseType.getSkinPrice(skinType, skin);
+        Float skinFloat = getSkinFloat();
+        Float skinPrice = getPrice(skinFloat, prices);
+        return new Skin(skin, skinFloat, skinPrice);
     }
 
-    private String getRandomWeapon(){
+    // выбираем тип оружия
+    private String getRandomWeaponType(){
         Random random = new Random();
         float randomValue = random.nextFloat();
         float sum = 0;
-        for (int i = 0; i < Spectrum.getChance().length; i++){
-            sum += Spectrum.getChance()[i];
+        for (int i = 0; i < Spectrum.getChances().length; i++){
+            sum += Spectrum.getChances()[i];
             if (randomValue < sum){
-                return skinType.get(i);
+                return caseType.getSkinType(i);
             }
         }
-        return skinType.get(-1);
+        return caseType.getSkinType(-1);
     }
 
-    private float getPrice(float weaponFloat, float[] weaponPrice){
+    // тут цена скина
+    private float getPrice(Float weaponFloat, Float[] weaponPrice){
         return ((weaponFloat * (weaponPrice[1] - weaponPrice[0])) + weaponPrice[0]);
     }
 
-    private Map<String, Float> getRandom(){
-        String skinType = getRandomWeapon();
-        Map<String, Float[]> skin = getRandomSkin(skinType);
+
+    // тут флот скина
+    private Float getSkinFloat(){
+        return (float) Math.random();
     }
 
-    private Map<String, Float[]> getRandomSkin(String skinType){
-        Random random = new Random();
-        List<String> skins = new ArrayList<>(Spectrum.getDrop().get(skinType).keySet());
-        int randomIndex = random.nextInt(skins.size());
-        String skin = skins.get(randomIndex);
 
+    // Выбираем скин при готовом типе
+    private String getRandomSkin(String skinType){
+        Random random = new Random();
+        List<String> skins = caseType.getSkins(skinType);
+        int randomIndex = random.nextInt(skins.size());
+        return skins.get(randomIndex);
     }
 
 
