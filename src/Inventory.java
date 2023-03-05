@@ -4,8 +4,8 @@ import java.util.*;
 // тут инвентарь игрока, вся логика прописана тут
 public class Inventory {
 
-    private float sum;
-    private ArrayList<Map<String, Float>> inventory = new ArrayList<>();
+    private float sum; // деньги на счете
+    private ArrayList<Skin> inventory = new ArrayList<>(); // скины в инветаре
     private Case caseType; // какой кейс открываем (пока только спектр, так что только он)
 
     Inventory(float sum, Case caseType){
@@ -17,7 +17,13 @@ public class Inventory {
         return sum;
     }
 
+    /*
+    происходит открытие кейса, где выбираем по шансам тип скинов, потом рандомно скин
+    потом рандомно флот, потом рандомно цену (цену в кс определяет рынок, но тут я буду это делать своей логикой)
+    после чего кладу оружие в инвентарь
+     */
     public void openCase(){
+        Skin skin;
 
     }
 

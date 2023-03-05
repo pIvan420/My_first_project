@@ -4,9 +4,12 @@ import java.util.Map;
 public class Spectrum extends Case{
 
     // все передается в родительский класс
+    Spectrum(){
+        super(createBlueDrop(), createPurpleDrop(), createPinkDrop(), createRedDrop(), createGoldDrop());
+    }
 
     // синий дроп
-    protected Map<String, Float[]> createBlueDrop(){
+    private static Map<String, Float[]> createBlueDrop(){
         Map<String, Float[]> drop = new HashMap<>();
         drop.put("PP-Bizon | Вихрь джунглей", new Float[]{8.75f, 17.49f});
         drop.put("MP7 | Горн войны", new Float[] {6.01f, 17.28f});
@@ -19,7 +22,7 @@ public class Spectrum extends Case{
     }
 
     // фиолетовый дроп
-    protected Map<String, Float[]> createPurpleDrop(){
+    private static Map<String, Float[]> createPurpleDrop(){
         Map<String, Float[]> drop = new HashMap<>();
         drop.put("M249 | Укус изумрудного яда", new Float[]{ 71.94f, 144.63f });
         drop.put("Galil AR | Багровое цунами", new Float[]{ 70.42f, 145.39f });
@@ -30,7 +33,7 @@ public class Spectrum extends Case{
     }
 
     // розовый дроп
-    public Map<String, Float[]> createPinkDrop() {
+    private static Map<String, Float[]> createPinkDrop() {
         Map<String, Float[]> drop = new HashMap<>();
         drop.put("CZ75-Auto | Сян-лю", new Float[]{ 499.03f, 729.23f });
         drop.put("AWP | Горячечные грёзы", new Float[]{ 570.97f, 994.27f });
@@ -39,7 +42,7 @@ public class Spectrum extends Case{
     }
 
     // красный дроп
-    protected Map<String, Float[]> createRedDrop() {
+    private static Map<String, Float[]> createRedDrop() {
         Map<String, Float[]> drop = new HashMap<>();
         drop.put("USP-S | Неонуар", new Float[]{ 1078.32f, 3289.49f });
         drop.put("AK-47 | Кровавый спорт", new Float[]{ 5484.76f, 7738.34f });
@@ -47,7 +50,7 @@ public class Spectrum extends Case{
     }
 
     // ножи
-    protected Map<String, Float[]> createGoldDrop() {
+    private static Map<String, Float[]> createGoldDrop() {
         Map<String, Float[]> drop = new HashMap<>();
         drop.put("★ Нож-бабочка | Волны Черная Жемчужина", new Float[]{ 280494.13f, 290000.00f });
         return drop;
