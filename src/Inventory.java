@@ -6,7 +6,7 @@ public class Inventory {
 
     private float sum; // деньги на счете
 
-    private final float keyPrice = 145f;
+    private final float KEYPRICE = 145f;
     private ArrayList<Skin> inventory = new ArrayList<>(); // скины в инветаре
     private Case caseType; // какой кейс открываем (пока только спектр, так что только он)
 
@@ -19,10 +19,10 @@ public class Inventory {
         return sum;
     }
 
-    private void reduceSum() { sum -= keyPrice; } // при получении скина списываем деньги за ключ
+    private void reduceSum() { sum -= KEYPRICE; } // при получении скина списываем деньги за ключ
 
     public float getKeyPrice() {
-        return keyPrice;
+        return KEYPRICE;
     }
 
     // кладу скин в инвентарь и передаю его в класс OpenCase
@@ -37,13 +37,14 @@ public class Inventory {
     происходит открытие кейса, где выбираем по шансам тип скинов, потом рандомно скин
     потом рандомно флот, потом рандомно цену (цену в кс определяет рынок, но тут я буду это делать своей логикой)
     */
-    private Skin getSkin(){ // добавить еще в скин skinType и выводить его редкость и добавить starTrack
+    private Skin getSkin(){
         String skinType = getRandomWeaponType();
+        boolean isStarTrack = isStarTrack();
         String skin = getRandomSkin(skinType);
         Float[] prices = caseType.getSkinPrice(skinType, skin);
         Float skinFloat = getSkinFloat();
-        Float skinPrice = getPrice(skinFloat, prices);
-        return new Skin(skin, skinFloat, skinPrice);
+        Float skinPrice = getPrice(skinFloat, prices, isStarTrack);
+        return new Skin(skinType, skin, skinFloat, skinPrice, isStarTrack);
     }
 
     // выбираем тип оружия
@@ -61,8 +62,12 @@ public class Inventory {
     }
 
     // тут цена скина
-    private float getPrice(Float weaponFloat, Float[] weaponPrice){
-        return ((weaponFloat * (weaponPrice[1] - weaponPrice[0])) + weaponPrice[0]);
+    // тут ваще пиздец, чо происходит. Я обрезаю цену до сотых через форматирование строки, но format меняет точку на запятую,
+    // а потом parseFloat не может работать с запятой, так что ее надо опять менять на точку через метод replace
+    private float getPrice(Float weaponFloat, Float[] weaponPrice, boolean isStarTrack){
+        float price = weaponPrice[1] - (weaponFloat * (weaponPrice[1] - weaponPrice[0]));
+        if (isStarTrack) price *= 1.5; // если стартрек, то буду на полтора увеличивать цену
+        return Float.parseFloat(String.format("%.2f", price).replace(",", "."));
     }
 
 
@@ -78,6 +83,10 @@ public class Inventory {
         List<String> skins = caseType.getSkins(skinType);
         int randomIndex = random.nextInt(skins.size());
         return skins.get(randomIndex);
+    }
+
+    private boolean isStarTrack(){
+        return (Math.random() <= 0.1);
     }
 
 

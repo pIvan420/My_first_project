@@ -10,7 +10,7 @@ public class OpenCase {
         System.out.print("Привет, это открытие кейса \"Спектр\" из Cs:Go\nСколько денег вы положите на счет?\nВведите сумму: ");
         while (true){ // кладем деньги на счет
             try{ // защита от дурака на случай ввода строки или отрицательного числа
-                if (!scanner.hasNextFloat()) throw new IllegalArgumentException("Ошибка ввода, введите сумму еще" +
+                if (!scanner.hasNextFloat()) throw new IllegalArgumentException("Ошибка ввода, введите сумму еще" + // тут какая то ошибка
                         " раз (Пример: 123.45)\nВведите сумму: ");
                 float curScanner = scanner.nextFloat();
                 if (curScanner <= 0) throw new IllegalArgumentException("Ошибка ввода, сумма не может быть" +
@@ -33,8 +33,8 @@ public class OpenCase {
                         System.out.println("Иии вам выпало...");
                         Thread.sleep(2000);
                         Skin skin = inventory.openCase();
-                        System.out.println(skin.getSkinName() + "\nФлот скина: " + skin.getSkinFloat() + "\nЦена скина: " +
-                                skin.getSkinPrice());
+                        System.out.println("Редкость скина: " + skin.getSkinType() + "\n" + skin.getSkinName() + "\nФлот скина: " +
+                                skin.getSkinFloat() + "\nЦена скина: " + skin.getSkinPrice());
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
