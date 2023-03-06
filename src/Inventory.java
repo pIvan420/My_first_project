@@ -5,6 +5,8 @@ import java.util.*;
 public class Inventory {
 
     private float sum; // деньги на счете
+
+    private final float keyPrice = 145f;
     private ArrayList<Skin> inventory = new ArrayList<>(); // скины в инветаре
     private Case caseType; // какой кейс открываем (пока только спектр, так что только он)
 
@@ -17,9 +19,15 @@ public class Inventory {
         return sum;
     }
 
+    private void reduceSum() { sum -= keyPrice; } // при получении скина списываем деньги за ключ
+
+    public float getKeyPrice() {
+        return keyPrice;
+    }
 
     // кладу скин в инвентарь и передаю его в класс OpenCase
     public Skin openCase(){
+        reduceSum();
         Skin skin = getSkin();
         inventory.add(skin);
         return skin;
@@ -29,7 +37,7 @@ public class Inventory {
     происходит открытие кейса, где выбираем по шансам тип скинов, потом рандомно скин
     потом рандомно флот, потом рандомно цену (цену в кс определяет рынок, но тут я буду это делать своей логикой)
     */
-    private Skin getSkin(){
+    private Skin getSkin(){ // добавить еще в скин skinType и выводить его редкость и добавить starTrack
         String skinType = getRandomWeaponType();
         String skin = getRandomSkin(skinType);
         Float[] prices = caseType.getSkinPrice(skinType, skin);
