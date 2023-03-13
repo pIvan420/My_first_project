@@ -31,5 +31,9 @@ public class Skin { // тут будут храниться цена, флот, 
         return skinPrice;
     }
 
-
+    @Override
+    public String toString() {
+        return "Редкость скина: " + getSkinType() + "\n" + getSkinName() + "\nФлот скина: " +
+                getSkinFloat() + "\nЦена скина: " + getSkinPrice();
+    }
 }

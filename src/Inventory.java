@@ -89,5 +89,10 @@ public class Inventory {
         return (Math.random() <= 0.1);
     }
 
+    public void getSkins(){ // фигнюха, шоб выводить скины, которые лежат в инвентаре
+        for (Skin skin: inventory){
+            System.out.println("Индекс: " + inventory.indexOf(skin) + "\n" + skin);
+        }
+    }
 
 }
