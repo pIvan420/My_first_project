@@ -89,10 +89,24 @@ public class Inventory {
         return (Math.random() <= 0.1);
     }
 
-    public void getSkins(){ // фигнюха, шоб выводить скины, которые лежат в инвентаре
+    public void getSkins() throws InventoryIsNull { // фигнюха, шоб выводить скины, которые лежат в инвентаре
+        if (inventory.size() == 0) throw new InventoryIsNull("Ваш инвентарь пуст");
         for (Skin skin: inventory){
-            System.out.println("Индекс: " + inventory.indexOf(skin) + "\n" + skin);
+            System.out.println("Индекс: " + inventory.indexOf(skin) + "\n" + skin + "\n");
         }
     }
 
+    public void sellSkin(int index) throws IllegalArgumentException{ // тут буду продавать скины из инвентаря
+        if (index < 0 || index >= inventory.size()) throw new IllegalArgumentException("Ошибка ввода, такого индекса нет, введите индекс из предложенных выше.");
+        sum += inventory.remove(index).getSkinPrice();
+        System.out.println("Ваш скин был продан, ваша на вашем счету " + getSum() + " рублей.");
+    }
+
+
+}
+
+class InventoryIsNull extends Exception{
+    public InventoryIsNull(String message){
+        super(message);
+    }
 }

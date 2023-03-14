@@ -41,7 +41,7 @@ public class OpenCase {
                             throw new RuntimeException(e);
                         }
 
-                    } else if (response.equalsIgnoreCase("нет")) { // тут надо прописать продажу скина и если не хочет, то выход из программы
+                    } else if (response.equalsIgnoreCase("нет")) {
                         checkInventory(inventory);
                         System.out.println("Хотите ли продолжить открывать кейсы?");
                         while (true) {
@@ -59,7 +59,7 @@ public class OpenCase {
                     if (answer) {
                         System.out.println("Хорошо, продолжаем");
                     } else {
-                        System.out.println("На вашем счету недостаточно средств...");
+                        System.out.println("На вашем счету недостаточно средств, придется завершать игру...");
                         break open;
                     }
                 }
@@ -68,16 +68,36 @@ public class OpenCase {
         System.out.println("Спасибо что открывали кейс. Удачи!");
     }
 
-    // добавить бы еще проверку на то, что у чела нет денег и нет оружия в инвентаре и сразу выход из игры в случае чего
-    private static boolean checkInventory(Inventory inventory){ // тут надо прописать проверку инвентаря и продажу скинов или еще как то, я пока не продумал
+    // тут идет просмотр инвентаря и продажа оружий из него
+    private static boolean checkInventory(Inventory inventory){
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Хотите ли посмотреть инвентарь и продать ненужные скины? (Варианты ответа: Да, Нет)");
             String strAnswer = scanner.next();
             if (strAnswer.equalsIgnoreCase("да")) {
                 System.out.println("Ваши оружия:");
-                inventory.getSkins();
-                System.out.println("Напишите индекс скина, который хотите продать."); //тут доделать продажу скинов
+                try {
+                    inventory.getSkins();
+                } catch (InventoryIsNull e) { // тут прописана проверка при пустом инвентаре, если деньги на счете еще есть, то открываем дальше, если нет, то
+                    System.out.println(e.getMessage()); // принудительно завершаем
+                    if (inventory.getSum() < inventory.getKeyPrice()){
+                        return false;
+                    } else{
+                        return true;
+                    }
+                }
+                System.out.println("Напишите индекс скина, который хотите продать.");
+                while (true) {
+                    try {
+                        if (!scanner.hasNextInt())
+                            throw new IllegalArgumentException("Ошибка ввода, введите индекс скина.");
+                        int curIndex = scanner.nextInt();
+                        inventory.sellSkin(curIndex);
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
                 return true;
             } else if (strAnswer.equalsIgnoreCase("нет")) {
                 return false;
