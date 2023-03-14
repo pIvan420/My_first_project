@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
@@ -12,14 +13,16 @@ public class OpenCase {
             try{ // защита от дурака на случай ввода строки или отрицательного числа
                 scanner = new Scanner(System.in);
                 if (!scanner.hasNextFloat()) throw new IllegalArgumentException("Ошибка ввода, введите сумму еще" +
-                        " раз (Пример: 123.45)\nВведите сумму: ");
+                        " раз (Пример: 123,45)\nВведите сумму: ");
                 float curScanner = scanner.nextFloat();
                 if (curScanner <= 0) throw new IllegalArgumentException("Ошибка ввода, сумма не может быть" +
-                        " отрицательной, введите сумму еще раз (Пример: 123.45)\nВведите сумму: ");
+                        " отрицательной, введите сумму еще раз (Пример: 123,45)\nВведите сумму: ");
+                if (String.valueOf(curScanner).split("\\.")[1].length() > 2) throw new IllegalArgumentException("Ошибка ввода, " +
+                        "после запятой идет максимум 2 знака, введите сумму еще раз (Пример: 123,45)\nВведите сумму: ");
                 inventory = new Inventory(curScanner, spectrum); // деньги хранятся в инвентаре
                 break;
             }catch (IllegalArgumentException e){
-                System.out.println(e.getMessage());
+                System.out.print(e.getMessage());
             }
         }
         System.out.println("Сумма была положена на счет.");
@@ -75,28 +78,43 @@ public class OpenCase {
             System.out.println("Хотите ли посмотреть инвентарь и продать ненужные скины? (Варианты ответа: Да, Нет)");
             String strAnswer = scanner.next();
             if (strAnswer.equalsIgnoreCase("да")) {
-                System.out.println("Ваши оружия:");
-                try {
-                    inventory.getSkins();
-                } catch (InventoryIsNull e) { // тут прописана проверка при пустом инвентаре, если деньги на счете еще есть, то открываем дальше, если нет, то
-                    System.out.println(e.getMessage()); // принудительно завершаем
-                    if (inventory.getSum() < inventory.getKeyPrice()){
-                        return false;
-                    } else{
-                        return true;
-                    }
-                }
-                System.out.println("Напишите индекс скина, который хотите продать.");
-                while (true) {
+                while (true) { // цикл нужен для продажи оружий несколько раз
+                    System.out.println("Ваши оружия:");
                     try {
-                        if (!scanner.hasNextInt())
-                            throw new IllegalArgumentException("Ошибка ввода, введите индекс скина.");
-                        int curIndex = scanner.nextInt();
-                        inventory.sellSkin(curIndex);
-                        break;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(e.getMessage());
+                        inventory.getSkins();
+                    } catch (
+                            InventoryIsNull e) { // тут прописана проверка при пустом инвентаре, если деньги на счете еще есть, то открываем дальше, если нет, то
+                        System.out.println(e.getMessage()); // принудительно завершаем
+                        if (inventory.getSum() < inventory.getKeyPrice()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
                     }
+                    System.out.println("Напишите индекс скина, который хотите продать.");
+                    while (true) {
+                        try { // тут пиздец костыли, оно с хуято не читает нужные строки, я не ебу почему, а разбираться в падлу, так шо пусть так
+                            scanner = new Scanner(System.in); // просто защита от дурака, ввел ли он строку или число, но работало оно через жопу
+                            int curIndex;
+                            if (scanner.hasNextInt()) {
+                                curIndex = scanner.nextInt();
+                            } else throw new IllegalArgumentException("Ошибка ввода, введите индекс скина.");
+                            inventory.sellSkin(curIndex);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    System.out.println("Хотите еще продать оружия?");
+                    String sellAgain = scanner.next();
+                    if (sellAgain.equalsIgnoreCase("да")){
+                        System.out.println("Продолжаем!");
+                    }
+                    else {
+                        System.out.println("Будем считать, что нет"); // я рот ебал прописывать эту ЗоД
+                        break;
+                    }
+
                 }
                 return true;
             } else if (strAnswer.equalsIgnoreCase("нет")) {
